@@ -641,3 +641,9 @@ body {
         margin-top: 20px;
     }
 }
+
+.game-footer strong:hover {
+    color: #3b82f6; /* Cambia al azul del equipo A */
+    transition: color 0.3s ease;
+    cursor: default;
+}
