@@ -130,7 +130,7 @@ const defeatMessages = {
 const allWords = [...new Set(Object.values(wordSets).flat())];
 
 // --- 2. GESTIÓN DE ESTADO ---
-let stats = JSON.parse(localStorage.getItem('wordleElite_Final_V5')) || {
+let stats = JSON.parse(localStorage.getItem('wordleElite_Final_V6')) || {
     wins: { A: 0, B: 0 },
     turns: { A: 0, B: 0 },
     hist: { A: [0, 0, 0, 0, 0, 0], B: [0, 0, 0, 0, 0, 0] },
@@ -307,7 +307,7 @@ function saveNames() {
 }
 
 function saveStats() {
-    localStorage.setItem('wordleElite_Final_V5', JSON.stringify(stats));
+    localStorage.setItem('wordleElite_Final_V6', JSON.stringify(stats));
     renderUI();
 }
 
@@ -436,8 +436,8 @@ function resetRound() {
 }
 
 function renderUI() {
-    const nA = localStorage.getItem('nA') || "EQUIPO AZUL";
-    const nB = localStorage.getItem('nB') || "EQUIPO ROJO";
+    const nA = localStorage.getItem('nA') || "EQUIPO UNO";
+    const nB = localStorage.getItem('nB') || "EQUIPO DOS";
     document.getElementById("nameA").innerText = nA;
     document.getElementById("nameB").innerText = nB;
     document.getElementById("turnStatA").innerText = "Partidas: " + stats.turns.A;

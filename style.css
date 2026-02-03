@@ -612,3 +612,32 @@ body {
     color: black;
     background-color: white;
 }
+
+.game-footer {
+    width: 100%;
+    padding: 20px 0;
+    margin-top: 40px; /* Separación del teclado */
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: transparent;
+}
+
+.game-footer p {
+    color: #94a3b8; /* Gris azulado suave */
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.game-footer strong {
+    color: #94a3b8; /* Color de nombre más brillante */
+    font-weight: 600;
+}
+
+/* Evitar que estorbe en móviles si el teclado está abierto */
+@media (max-height: 700px) {
+    .game-footer {
+        padding: 10px 0;
+        margin-top: 20px;
+    }
+}
