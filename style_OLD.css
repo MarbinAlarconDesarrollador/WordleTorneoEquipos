@@ -1,0 +1,283 @@
+:root {
+    --bg: #f0f4f8;
+    --panel: #ffffff;
+    --team-a: #3b82f6;
+    --team-b: #f43f5e;
+    --correct: #10b981;
+    --present: #f59e0b;
+    --absent: #64748b;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+}
+
+/* --- RESET Y BASE --- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    font-family: 'Inter', -apple-system, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    color: var(--text-main);
+    overflow-x: hidden;
+    user-select: none;
+    padding-bottom: 40px;
+}
+
+/* --- LAYOUT PRINCIPAL --- */
+.layout {
+    display: grid;
+    /* Tres columnas en pantallas grandes */
+    grid-template-columns: 300px 1fr 300px;
+    gap: 30px;
+    width: 100%;
+    max-width: 1400px;
+    padding: 20px;
+    align-items: start;
+}
+
+/* --- PANELES LATERALES (EQUIPOS) --- */
+.side {
+    background: var(--panel);
+    border-radius: 24px;
+    padding: 25px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+}
+
+.team-name {
+    text-align: center;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 10px;
+    outline: none;
+}
+
+.turn-stat {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    background: #f8fafc;
+    padding: 5px 10px;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    font-weight: 600;
+    border: 1px solid #e2e8f0;
+}
+
+/* --- ÁREA DE JUEGO CENTRAL --- */
+.game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.tournament-goal {
+    background: #1e293b;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-weight: 700;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 10px auto 20px auto;
+}
+
+.tournament-goal input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid #475569;
+    color: white;
+    width: 50px;
+    text-align: center;
+    border-radius: 5px;
+    font-weight: 900;
+}
+
+#timer {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: #cbd5e1;
+    margin: 10px 0;
+}
+
+#timer.active { color: var(--text-main); }
+
+/* --- GRID DE WORDLE --- */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin: 20px auto;
+    width: 100%;
+    max-width: 350px; /* Tamaño máximo en desktop */
+}
+
+.cell {
+    aspect-ratio: 1 / 1; /* Mantiene la celda cuadrada */
+    border: 2px solid #d1d5db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 900;
+    border-radius: 12px;
+    background-color: #ffffff;
+    text-transform: uppercase;
+    transition: all 0.2s;
+}
+
+/* Estados de las celdas */
+.cell.correct { background-color: var(--correct) !important; color: white !important; border-color: var(--correct) !important; }
+.cell.present { background-color: var(--present) !important; color: white !important; border-color: var(--present) !important; }
+.cell.absent  { background-color: var(--absent) !important; color: white !important; border-color: var(--absent) !important; }
+
+/* --- TECLADO --- */
+#keyboard {
+    width: 100%;
+    max-width: 500px;
+    margin-top: 20px;
+}
+
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8px;
+    touch-action: manipulation;
+}
+
+.key {
+    padding: 15px;
+    margin: 4px;
+    min-width: 40px;
+    flex: 1;
+    border: none;
+    background: #e2e8f0;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s;
+}
+
+.key.correct { background: var(--correct) !important; color: white; }
+.key.present { background: var(--present) !important; color: white; }
+.key.absent  { background: var(--absent) !important; color: white; }
+
+/* --- RESPONSIVIDAD (MÓVIL Y TABLET) --- */
+@media (max-width: 1024px) {
+    .layout {
+        grid-template-columns: 1fr; /* Una sola columna */
+        max-width: 600px;
+    }
+
+    .game {
+        order: 1; /* El juego siempre aparece primero */
+    }
+
+    .side {
+        order: 2; /* Los equipos aparecen después del juego */
+        margin-top: 20px;
+    }
+
+    .grid {
+        max-width: 320px;
+        gap: 8px;
+    }
+
+    .cell {
+        font-size: 1.5rem;
+    }
+
+    .key {
+        padding: 18px 5px;
+        margin: 2px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Dispositivos muy pequeños */
+@media (max-width: 400px) {
+    .grid {
+        max-width: 280px;
+        gap: 5px;
+    }
+    .cell {
+        font-size: 1.2rem;
+        border-radius: 8px;
+    }
+    .key {
+        padding: 15px 2px;
+        font-size: 0.8rem;
+    }
+    #timer {
+        font-size: 2.5rem;
+    }
+}
+
+/* --- BOTONES Y OVERLAY --- */
+.btn-next {
+    width: 100%;
+    max-width: 300px;
+    padding: 15px;
+    background: #1e293b;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.btn-reset-all {
+    margin: 30px 0;
+    padding: 12px 24px;
+    background: #f1f5f9;
+    color: #94a3b8;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#winnerOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 2000;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* --- ANIMACIONES --- */
+.win-bounce { animation: winBounce 0.6s ease; }
+@keyframes winBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+.cell-error {
+    animation: shakeAnim 0.4s;
+    border-color: #ef4444 !important;
+}
+
+@keyframes shakeAnim {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}

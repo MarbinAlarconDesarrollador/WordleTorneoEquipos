@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creando Wordle PRO</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <meta name="theme-color" content="#1e293b">
+  <link rel="apple-touch-icon" href="icon-192.png"> 
+</head>
+<body>
+
+  <div id="winnerOverlay">
+    <h1 style="font-size: 5rem; margin: 0;">🏆</h1>
+    <h2 id="winnerName" style="font-size: 3.5rem; margin: 10px 0; color: #1e293b;">GANADOR</h2>
+    <p style="font-size: 1.5rem; color: #64748b; margin-bottom: 30px;">¡Torneo Finalizado!</p>
+    <button class="btn-next" style="width: 250px; font-size: 1.2rem;" onclick="hardReset()">NUEVO TORNEO</button>
+  </div>
+
+  <div id="goalBox" class="tournament-goal">
+    OBJETIVO DEL TORNEO:
+    <input type="number" id="goalInput" value="5" min="1" onchange="saveGoal()">
+    <span>VICTORIAS</span>
+  </div>
+
+  <div class="layout">
+    <div class="side">
+      <h3 id="nameA" class="team-name" contenteditable="true" onblur="saveNames()">EQUIPO AZUL</h3>
+      <div id="turnStatA" class="turn-stat">Partidas: 0</div>
+      <div id="histA"></div>
+    </div>
+
+    <div class="game">
+      <h1 style="margin:0; font-size: 1.5rem; opacity: 0.5;">Creando Wordle PRO</h1>
+      <div id="timer">90</div>
+      <div id="scoreHeader"></div>
+      <div id="grid" class="grid"></div>
+      <div id="message" style="height: 30px; font-weight: 800; color: #ef4444; margin: 10px 0;"></div>
+      <div id="keyboard"></div>
+      <button id="btnNext" class="btn-next" onclick="resetRound()">SIGUIENTE RONDA</button>
+    </div>
+
+    <div class="side">
+      <h3 id="nameB" class="team-name" contenteditable="true" onblur="saveNames()">EQUIPO ROJO</h3>
+      <div id="turnStatB" class="turn-stat">Partidas: 0</div>
+      <div id="histB"></div>
+    </div>
+  </div>
+
+  <button class="btn-reset-all" onclick="hardReset()">⚠️ REINICIAR TORNEO</button>
+
+  <script src="script.js"></script>
+  <script>
+    // Registro del Service Worker para que sea instalable
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+  </script>
+</body>
+</html>
