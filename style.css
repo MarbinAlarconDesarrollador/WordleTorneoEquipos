@@ -442,3 +442,35 @@ select { cursor: pointer; }
 .example-row p {
     color: var(--text-muted);
 }
+
+.fair-play {
+  background: #f5f7fa;
+  border-left: 4px solid #ff9800;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.fair-play strong {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #222;
+}
+
+.fair-play span {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.fair-play .warning {
+  font-weight: 600;
+  color: #d32f2f;
+}
+
+.fair-play .limit {
+  font-weight: 500;
+  color: #1565c0;
+}

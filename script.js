@@ -119,15 +119,15 @@ const playableCategories = ["ANIMALES", "PAISES", "NOMBRES", "COMIDA", "VERBOS",
 function pickRandomCategory() {
     const currentTeam = stats.current;
     const usage = stats.categoryUsage[currentTeam];
-    
+
     // Filtramos: solo categorías con menos de 2 usos para este equipo
     let available = playableCategories.filter(cat => usage[cat] < 2);
-    
+
     // Si por alguna razón técnica se agotan todas, permitimos todas de nuevo (fail-safe)
     if (available.length === 0) {
         available = playableCategories;
     }
-    
+
     return available[Math.floor(Math.random() * available.length)];
 }
 
@@ -200,17 +200,17 @@ async function showCategoryRoulette() {
         const tempCat = playableCategories[Math.floor(Math.random() * playableCategories.length)];
         catDisplay.value = tempCat;
         soundTick.currentTime = 0;
-        soundTick.play().catch(e => {});
+        soundTick.play().catch(e => { });
         await new Promise(resolve => setTimeout(resolve, 100 + (i * 12)));
     }
 
     // --- SELECCIÓN FINAL ---
     const finalCategory = pickRandomCategory();
-    
+
     // Calculamos cuántas veces se ha usado ANTES de incrementar (solo visualmente aquí)
     const usosPrevios = stats.categoryUsage[stats.current][finalCategory];
-    const usosRestantes = 2 - (usosPrevios + 1); 
-    
+    const usosRestantes = 2 - (usosPrevios + 1);
+
     // Seteamos pero NO incrementamos aún el uso en stats.categoryUsage
     stats.category = finalCategory;
     catDisplay.value = finalCategory;
@@ -228,7 +228,7 @@ async function showCategoryRoulette() {
     catDisplay.classList.remove("roulette-anim");
     catDisplay.style.backgroundColor = "#22c55e";
     catDisplay.style.color = "#fff";
-    
+
     // Mostramos el nombre de la categoría y el aviso de disponibilidad
     msgDisplay.innerHTML = `<div>¡CATEGORÍA: ${finalCategory}!</div>
                             <div style="font-size: 0.8rem; margin-top: 5px; color: #fde047;">${extraMsg}</div>`;
@@ -236,7 +236,7 @@ async function showCategoryRoulette() {
     setTimeout(() => {
         catDisplay.style.backgroundColor = "";
         catDisplay.style.color = "";
-        msgDisplay.innerText = ""; 
+        msgDisplay.innerText = "";
         catDisplay.disabled = false;
         showingCategory = false;
         gameOver = false;
@@ -646,9 +646,9 @@ const steps = [
     },
     {
         element: "categorySelect",
-        title: "Elige tu Categoría",
-        text: "Puedes cambiar la temática aquí. Recuerda que cada equipo solo puede repetir una categoría 2 veces.",
-        pos: { top: "80px", left: "50%" } // Ajustado al centro arriba
+        title: "Elección de Categoría",
+        text: "La ruleta elegirá una temática. ¡Ojo! Solo se descuenta de tus 2 oportunidades si empiezas a escribir. Si la categoria te parece muy difícil, ¡puedes saltarla antes de tocar el teclado!. Pero Recuerda que cada equipo solo puede repetir una categoría 2 veces.",
+        pos: { top: "80px", left: "50%" }
     },
     {
         element: "timeInput",
@@ -660,7 +660,7 @@ const steps = [
         element: "grid",
         title: "Adivina la Palabra",
         text: "Verde: Letra y posición correctas. Amarillo: Existe pero en otro lugar. Gris: No existe.",
-        pos: { top: "50%", left: "50%" } // Centro para el tablero
+        pos: { top: "50%", left: "30%" } // Centro para el tablero
     }
 ];
 
@@ -798,7 +798,7 @@ window.addEventListener('beforeunload', function (e) {
 function toggleTheme() {
     const body = document.body;
     body.classList.toggle("dark-mode");
-    
+
     const isDark = body.classList.contains("dark-mode");
     localStorage.setItem("theme", isDark ? "dark" : "light");
 }

@@ -69,7 +69,8 @@
         </div>
 
         <div class="game">
-            <h1 style="margin: 0 0 10px 0; font-size: 1.2rem; opacity: 0.4; letter-spacing: 2px;">WORDLE CREANDO SOFT</h1>
+            <h1 style="margin: 0 0 10px 0; font-size: 1.2rem; opacity: 0.4; letter-spacing: 2px;">WORDLE CREANDO SOFT
+            </h1>
 
             <div id="turnIndicator" class="turn-banner">
                 TURNO: <span id="activePlayerName">---</span>
@@ -148,6 +149,24 @@
                     <div class="cell-mini absent">L</div>
                 </div>
                 <p><small><strong>GRIS:</strong> Esas letras no están en la palabra.</small></p>
+                <br>
+                <p class="fair-play">
+                    <small>
+                        <strong>Fair Play</strong>
+                        <span>La ruleta seleccionará una temática.</span>
+                        <span class="warning">¡Ojo!</span>
+                        <span>
+                            Solo se descontará una de tus dos oportunidades si comienzas a escribir.
+                        </span>
+                        <span>
+                            Si la categoría te parece muy difícil, puedes saltarla antes de tocar el teclado.
+                        </span>
+                        <span class="limit">
+                            Recuerda que cada equipo solo puede repetir una categoría hasta dos veces.
+                        </span>
+                    </small>
+                </p>
+
             </div>
 
             <button class="btn-next" onclick="closeTutorial()" style="width: 100%;">¡ENTENDIDO!</button>
