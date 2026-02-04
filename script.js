@@ -182,6 +182,7 @@ if (!stats.categoryUsage) {
 }
 
 let showingCategory = false;
+let categoriaRegistradaEnRonda = false; // VARIABLE PARA CONTROLAR EL COBRO
 
 
 async function showCategoryRoulette() {
@@ -206,12 +207,11 @@ async function showCategoryRoulette() {
     // --- SELECCIÓN FINAL ---
     const finalCategory = pickRandomCategory();
     
-    // Calculamos cuántas veces se ha usado ANTES de incrementar
+    // Calculamos cuántas veces se ha usado ANTES de incrementar (solo visualmente aquí)
     const usosPrevios = stats.categoryUsage[stats.current][finalCategory];
-    const usosRestantes = 2 - (usosPrevios + 1); // +1 porque estamos contando la actual
+    const usosRestantes = 2 - (usosPrevios + 1); 
     
-    // Incrementar y Guardar
-    stats.categoryUsage[stats.current][finalCategory]++;
+    // Seteamos pero NO incrementamos aún el uso en stats.categoryUsage
     stats.category = finalCategory;
     catDisplay.value = finalCategory;
     saveStats();
@@ -240,6 +240,7 @@ async function showCategoryRoulette() {
         catDisplay.disabled = false;
         showingCategory = false;
         gameOver = false;
+        categoriaRegistradaEnRonda = false; // Reset para la nueva ronda
         pickNewWord();
     }, 3500); // Un poco más de tiempo para leer el aviso
 }
@@ -494,6 +495,13 @@ function renderKeyboard() {
 
 function handleKey(k) {
     if (gameOver) return;
+
+    // REGISTRO DE CATEGORÍA AL ESCRIBIR LA PRIMERA LETRA
+    if (!categoriaRegistradaEnRonda && k !== "ENTER" && k !== "⌫" && k.length === 1) {
+        stats.categoryUsage[stats.current][stats.category]++;
+        categoriaRegistradaEnRonda = true;
+        saveStats();
+    }
 
     // Si es la primera tecla del torneo
     if (!stats.started && k !== "ENTER" && k !== "⌫" && k.length === 1) {
@@ -805,4 +813,3 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.classList.remove("dark-mode");
     }
 });
-
