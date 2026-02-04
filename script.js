@@ -14,7 +14,8 @@ const wordSets = {
     PAISES: [
         "CHILE", "CHINA", "JAPON", "RUSIA", "INDIA", "PARIS", "DUBAI", "QATAR", "COREA",
         "KENIA", "TOKIO", "NEPAL", "SIRIA", "SUDAN", "SAMOA", "TONGA", "HAITI", "LIBIA",
-        "MALTA", "YEMEN", "GABON", "CONGO", "NAURU"
+        "MALTA", "YEMEN", "GABON", "CONGO", "NAURU", "QUITO", "PEKIN", "MOSCU", "VIENA",
+        "PRAGA", "SUIZA", "MIAMI"
     ],
     NOMBRES: [
         "PABLO", "MARIA", "JESUS", "LAURA", "PEDRO", "DIEGO", "ELENA", "SOFIA", "LUCAS",
@@ -39,6 +40,12 @@ const wordSets = {
         "PEGAR", "PODER", "ROBAR", "SABER", "TRAER", "MIRAN", "DICEN", "SABEN", "COMEN",
         "AYUDA", "BAILE", "CANTO", "GRITO", "HABLA", "JUEGO", "NACER", "BESAR"
 
+    ],
+    INGLES: [
+        "APPLE", "BREAD", "BACON", "DRINK", "SALAD", "GRAPE", "TIGER", "WHALE", "SNAKE",
+        "SHEEP", "EAGLE", "WRITE", "SPEAK", "LAUGH", "DANCE", "LEARN", "CHAIR", "TABLE",
+        "PHONE", "CLOCK", "LIGHT", "NOTES", "STONE", "STORY", "PARTY", "LUCKY", "CANDY",
+        "FUNNY", "FLOOR", "GREEN", "HELLO", "DADDY", "HOBBY", "SILLY", "BERRY"
     ],
     GENERAL: [
         "PERRO", "GATOS", "TIGRE", "CEBRA", "MOSCA", "PANDA", "PULPO", "GALLO", "CISNE",
@@ -98,13 +105,30 @@ const wordSets = {
         "VELAS", "VENTA", "VERDE", "VIAJE", "VIDAS", "VIEJO", "VUELO", "VISTA", "SUEÑA",
         "VIVIR", "ZUMOS", "BELLA", "DANZA", "USADO", "CAMAS", "PLATO", "CABLE", "OIDOS",
         "TAPAS", "VIDEO", "POBRE", "FONDO", "AVISO", "NUBES", "CLIMA", "FORMA", "PASOS",
-        "PLANO", "TURNO", "RUIDO", "LUCES", "FRASE", "SONAR", "ZONAR", "DEDOS", "BANDA"
+        "PLANO", "TURNO", "RUIDO", "LUCES", "FRASE", "SONAR", "ZONAR", "DEDOS", "BANDA",
+        "TEXTO", "LATEX", "QUITO", "PEKIN", "MOSCU", "VIENA", "PRAGA", "SUIZA", "MIAMI",
+        "APPLE", "BREAD", "BACON", "DRINK", "SALAD", "GRAPE", "TIGER", "WHALE", "SNAKE",
+        "SHEEP", "EAGLE", "WRITE", "SPEAK", "LAUGH", "DANCE", "LEARN", "CHAIR", "TABLE",
+        "PHONE", "CLOCK", "LIGHT", "NOTES", "STONE", "STORY", "PARTY", "LUCKY", "CANDY",
+        "FUNNY", "FLOOR", "GREEN", "HELLO", "DADDY", "HOBBY", "SILLY", "BERRY"
     ]
 };
-const playableCategories = ["ANIMALES", "PAISES", "NOMBRES", "COMIDA", "VERBOS", "GENERAL"];
+const playableCategories = ["ANIMALES", "PAISES", "NOMBRES", "COMIDA", "VERBOS", "GENERAL", "INGLES"];
+
 
 function pickRandomCategory() {
-    return playableCategories[Math.floor(Math.random() * playableCategories.length)];
+    const currentTeam = stats.current;
+    const usage = stats.categoryUsage[currentTeam];
+    
+    // Filtramos: solo categorías con menos de 2 usos para este equipo
+    let available = playableCategories.filter(cat => usage[cat] < 2);
+    
+    // Si por alguna razón técnica se agotan todas, permitimos todas de nuevo (fail-safe)
+    if (available.length === 0) {
+        available = playableCategories;
+    }
+    
+    return available[Math.floor(Math.random() * available.length)];
 }
 
 
@@ -114,7 +138,8 @@ const victoryMessages = {
     NOMBRES: ["¡Qué buena memoria!", "¡Un nombre inolvidable!", "¡Eres un gran anfitrión!", "¡Persona ganadora!"],
     COMIDA: ["¡Buen provecho!", "¡Qué exquisita victoria!", "¡Tienes buen gusto!", "¡Victoria con sabor!"],
     VERBOS: ["¡Acción y victoria!", "¡Bien conjugado!", "¡Sabes cómo moverte!", "¡Excelente ejecución!"],
-    GENERAL: ["¡Punto para el equipo!", "¡Impresionante!", "¡Lo lograste!", "¡Qué gran nivel!"]
+    GENERAL: ["¡Punto para el equipo!", "¡Impresionante!", "¡Lo lograste!", "¡Qué gran nivel!"],
+    INGLES: ["¡Very good! ¡Dominas el idioma!", "¡Victory! Eres casi un nativo.", "¡Excellent! Tienes un gran vocabulario.", "¡You win! ¡Qué buen nivel de inglés!"]
 };
 
 const defeatMessages = {
@@ -123,56 +148,42 @@ const defeatMessages = {
     NOMBRES: ["¡Se te olvidó quién era!", "¡Desconocido total!", "¡Nombre borrado!", "¡Mala memoria!"],
     COMIDA: ["¡Se te quemó el arroz!", "¡Plato amargo!", "¡Receta fallida!", "¡Mal sabor de boca!"],
     VERBOS: ["¡Te quedaste sin acción!", "¡Mal conjugado!", "¡Falta de movimiento!", "¡Verbo fallido!"],
-    GENERAL: ["¡Suerte para la próxima!", "¡Casi lo logras!", "¡Inténtalo de nuevo!", "¡No te rindas!"]
+    GENERAL: ["¡Suerte para la próxima!", "¡Casi lo logras!", "¡Inténtalo de nuevo!", "¡No te rindas!"],
+    INGLES: ["¡Lost in translation! Te faltó vocabulario.", "¡Game over! Se te trabó la lengua.", "¡Te faltó el diccionario!", "¡Keep trying! Sigue practicando tu inglés."]
 };
 
 // Diccionario MAESTRO para validación (permite cruce de categorías)
 const allWords = [...new Set(Object.values(wordSets).flat())];
 
 // --- 2. GESTIÓN DE ESTADO ---
-let stats = JSON.parse(localStorage.getItem('wordleElite_Final_V6')) || {
+let stats = JSON.parse(localStorage.getItem('wordleElite_Final_V7')) || {
     wins: { A: 0, B: 0 },
     turns: { A: 0, B: 0 },
     hist: { A: [0, 0, 0, 0, 0, 0], B: [0, 0, 0, 0, 0, 0] },
     current: "A",
     goal: 5,
     started: false,
-    usedWords: [], // Aquí se guardan TODAS las usadas, sin importar categoría
+    usedWords: [],
     category: "GENERAL",
-    timeLimit: 120
+    timeLimit: 120,
+    // NUEVO: Seguimiento de categorías por equipo
+    categoryUsage: {
+        A: { ANIMALES: 0, PAISES: 0, NOMBRES: 0, COMIDA: 0, VERBOS: 0, GENERAL: 0, INGLES: 0 },
+        B: { ANIMALES: 0, PAISES: 0, NOMBRES: 0, COMIDA: 0, VERBOS: 0, GENERAL: 0, INGLES: 0 }
+    }
 };
+
+// Parche de seguridad para sesiones existentes
+if (!stats.categoryUsage) {
+    stats.categoryUsage = {
+        A: { ANIMALES: 0, PAISES: 0, NOMBRES: 0, COMIDA: 0, VERBOS: 0, GENERAL: 0, INGLES: 0 },
+        B: { ANIMALES: 0, PAISES: 0, NOMBRES: 0, COMIDA: 0, VERBOS: 0, GENERAL: 0, INGLES: 0 }
+    };
+}
 
 let showingCategory = false;
 
-/* async function showCategoryRoulette() {
-    showingCategory = true;
-    gameOver = true; // Bloquea teclado
-    
-    const catDisplay = document.getElementById("categorySelect");
-    catDisplay.classList.add("roulette-anim"); // Añade una clase CSS para feedback visual
-
-    // Simulación de ruleta: cambia el texto rápidamente
-    for (let i = 0; i < 15; i++) {
-        const tempCat = playableCategories[Math.floor(Math.random() * playableCategories.length)];
-        catDisplay.value = tempCat;
-        await new Promise(resolve => setTimeout(resolve, 100)); // Espera 100ms
-    }
-
-    // Elegir la categoría final real
-    const finalCategory = pickRandomCategory();
-    stats.category = finalCategory;
-    catDisplay.value = finalCategory;
-    catDisplay.classList.remove("roulette-anim");
-
-    // Generar la palabra de esa categoría
-    pickNewWord(); 
-    
-    showingCategory = false;
-    gameOver = false;
-    console.log("Categoría seleccionada: " + finalCategory);
-} */
-
-async function showCategoryRoulette() {
+/*async function showCategoryRoulette() {
     showingCategory = true;
     gameOver = true; // Bloquea entrada
 
@@ -180,7 +191,7 @@ async function showCategoryRoulette() {
     const msgDisplay = document.getElementById("message");
 
     // Bloquear visualmente el select para que no intenten cambiarlo mientras gira
-    catDisplay.disabled = true; 
+    catDisplay.disabled = true;
 
     msgDisplay.innerText = "🎲 SORTEANDO CATEGORÍA...";
     catDisplay.classList.add("roulette-anim");
@@ -194,7 +205,7 @@ async function showCategoryRoulette() {
 
         // Sonido
         // Nota: El catch evita errores en consola si el navegador bloquea el autoplay inicial
-        soundTick.currentTime = 0; 
+        soundTick.currentTime = 0;
         soundTick.volume = 0.5;
         soundTick.play().catch(e => console.log("Audio bloqueado por navegador (falta interacción)"));
 
@@ -207,16 +218,16 @@ async function showCategoryRoulette() {
     const finalCategory = pickRandomCategory();
     stats.category = finalCategory;
     catDisplay.value = finalCategory;
-    
+
     // Guardamos estado inmediatamente por si recargan
-    saveStats(); 
+    saveStats();
 
     // Sonido Final
-    soundDing.play().catch(e => {});
+    soundDing.play().catch(e => { });
 
     // Estilos de Éxito
     catDisplay.classList.remove("roulette-anim");
-    catDisplay.style.backgroundColor = "#22c55e"; 
+    catDisplay.style.backgroundColor = "#22c55e";
     catDisplay.style.color = "#fff";
     msgDisplay.innerText = `¡CATEGORÍA: ${finalCategory}!`;
 
@@ -225,14 +236,74 @@ async function showCategoryRoulette() {
         catDisplay.style.backgroundColor = "";
         catDisplay.style.color = "";
         msgDisplay.innerText = ""; // Limpiar mensaje
-        
+
         // Reactivamos controles (pero startTimer los volverá a bloquear al teclear)
-        catDisplay.disabled = false; 
+        catDisplay.disabled = false;
         showingCategory = false;
         gameOver = false;
-        
+
         pickNewWord(); // Generar palabra y preparar juego
     }, 3000); // 2 segundos para leer la categoría
+}*/
+
+async function showCategoryRoulette() {
+    showingCategory = true;
+    gameOver = true;
+    const catDisplay = document.getElementById("categorySelect");
+    const msgDisplay = document.getElementById("message");
+
+    catDisplay.disabled = true;
+    msgDisplay.innerText = "🎲 SORTEANDO CATEGORÍA...";
+    catDisplay.classList.add("roulette-anim");
+
+    const totalJumps = 25;
+    for (let i = 0; i < totalJumps; i++) {
+        const tempCat = playableCategories[Math.floor(Math.random() * playableCategories.length)];
+        catDisplay.value = tempCat;
+        soundTick.currentTime = 0;
+        soundTick.play().catch(e => {});
+        await new Promise(resolve => setTimeout(resolve, 100 + (i * 12)));
+    }
+
+    // --- SELECCIÓN FINAL ---
+    const finalCategory = pickRandomCategory();
+    
+    // Calculamos cuántas veces se ha usado ANTES de incrementar
+    const usosPrevios = stats.categoryUsage[stats.current][finalCategory];
+    const usosRestantes = 2 - (usosPrevios + 1); // +1 porque estamos contando la actual
+    
+    // Incrementar y Guardar
+    stats.categoryUsage[stats.current][finalCategory]++;
+    stats.category = finalCategory;
+    catDisplay.value = finalCategory;
+    saveStats();
+
+    // --- MENSAJE PERSONALIZADO ---
+    let extraMsg = "";
+    if (usosRestantes === 1) {
+        extraMsg = " (Queda 1 oportunidad)";
+    } else if (usosRestantes === 0) {
+        extraMsg = " (¡ÚLTIMA VEZ DISPONIBLE!)";
+    }
+
+    soundDing.play().catch(e => { });
+    catDisplay.classList.remove("roulette-anim");
+    catDisplay.style.backgroundColor = "#22c55e";
+    catDisplay.style.color = "#fff";
+    
+    // Mostramos el nombre de la categoría y el aviso de disponibilidad
+    msgDisplay.innerHTML = `<div>¡CATEGORÍA: ${finalCategory}!</div>
+                            <div style="font-size: 0.8rem; margin-top: 5px; color: #fde047;">${extraMsg}</div>`;
+
+    setTimeout(() => {
+        catDisplay.style.backgroundColor = "";
+        catDisplay.style.color = "";
+        msgDisplay.innerText = ""; 
+        catDisplay.disabled = false;
+        showingCategory = false;
+        gameOver = false;
+        pickNewWord();
+    }, 3500); // Un poco más de tiempo para leer el aviso
 }
 
 // Parches de compatibilidad
@@ -306,14 +377,14 @@ function saveNames() {
     renderUI();
 }
 
+
 function saveStats() {
-    localStorage.setItem('wordleElite_Final_V6', JSON.stringify(stats));
+    localStorage.setItem('wordleElite_Final_V7', JSON.stringify(stats));
     renderUI();
 }
 
 function hardReset() {
     if (confirm("⚠️ ¿REINICIAR TORNEO COMPLETO?")) {
-        // Reseteamos todo, incluyendo la lista de palabras usadas
         stats = {
             wins: { A: 0, B: 0 },
             turns: { A: 0, B: 0 },
@@ -321,9 +392,13 @@ function hardReset() {
             current: "A",
             goal: stats.goal,
             started: false,
-            usedWords: [], // <--- LIMPIEZA DE MEMORIA
-            category: document.getElementById("categorySelect").value,
-            timeLimit: parseInt(document.getElementById("timeInput").value) || 120
+            usedWords: [],
+            category: "GENERAL",
+            timeLimit: 120,
+            categoryUsage: {
+                A: { ANIMALES: 0, PAISES: 0, NOMBRES: 0, COMIDA: 0, VERBOS: 0, GENERAL: 0, INGLES: 0 },
+                B: { ANIMALES: 0, PAISES: 0, NOMBRES: 0, COMIDA: 0, VERBOS: 0, GENERAL: 0, INGLES: 0 }
+            }
         };
         document.getElementById("winnerOverlay").style.display = "none";
         saveStats();
@@ -356,7 +431,7 @@ function pickNewWord() {
     if (!wordSets[stats.category]) stats.category = "GENERAL";
 
     let categoryList = wordSets[stats.category];
-    
+
     // Filtrar usadas
     const availableWords = categoryList.filter(word => !stats.usedWords.includes(word));
 
@@ -370,7 +445,7 @@ function pickNewWord() {
     // Registrar usada
     stats.usedWords.push(secret);
     saveStats();
-    
+
     // Debug
     console.log(`Juego listo. Cat: ${stats.category}, Palabra: ${secret}`);
 }
@@ -436,14 +511,27 @@ function resetRound() {
 }
 
 function renderUI() {
-    const nA = localStorage.getItem('nA') || "EQUIPO UNO";
-    const nB = localStorage.getItem('nB') || "EQUIPO DOS";
+    // 1. Obtener nombres y actualizar etiquetas básicas
+    const nA = localStorage.getItem('nA') || "EQUIPO AZUL";
+    const nB = localStorage.getItem('nB') || "EQUIPO ROJO";
     document.getElementById("nameA").innerText = nA;
     document.getElementById("nameB").innerText = nB;
     document.getElementById("turnStatA").innerText = "Partidas: " + stats.turns.A;
     document.getElementById("turnStatB").innerText = "Partidas: " + stats.turns.B;
 
-    // Inputs de Configuración
+    // 2. LÓGICA DEL NUEVO INDICADOR DE TURNO (El banner llamativo)
+    const indicator = document.getElementById("turnIndicator");
+    const nameSpan = document.getElementById("activePlayerName");
+
+    if (stats.current === "A") {
+        nameSpan.innerText = nA.toUpperCase();
+        indicator.className = "turn-banner turn-team-A active-turn-pulse";
+    } else {
+        nameSpan.innerText = nB.toUpperCase();
+        indicator.className = "turn-banner turn-team-B active-turn-pulse";
+    }
+
+    // 3. Inputs de Configuración
     const goalInput = document.getElementById("goalInput");
     const catSelect = document.getElementById("categorySelect");
     const timeInput = document.getElementById("timeInput");
@@ -452,7 +540,7 @@ function renderUI() {
     catSelect.value = stats.category;
     timeInput.value = stats.timeLimit;
 
-    // Solo bloqueamos el OBJETIVO del torneo si ya empezó el torneo
+    // Bloqueo de configuración si el torneo inició
     if (stats.started) {
         goalInput.disabled = true;
         document.getElementById("goalBox").classList.add("locked");
@@ -461,24 +549,35 @@ function renderUI() {
         document.getElementById("goalBox").classList.remove("locked");
     }
 
-    // NOTA: Ya no bloqueamos la categoría aquí, se bloquea en startTimer()
-
-    const curC = stats.current === "A" ? "#3b82f6" : "#f43f5e";
+    // 4. Marcador Central (Solo números para no repetir el nombre)
     document.getElementById("scoreHeader").innerHTML = `
-    <div style="color:${curC}; font-weight:800;">TURNO: ${stats.current === "A" ? nA : nB}</div>
-    <div style="font-size: 2.5rem; font-weight: 900;">${stats.wins.A} — ${stats.wins.B}</div>
-  `;
+        <div style="font-size: 2.8rem; font-weight: 900; letter-spacing: 2px;">
+            ${stats.wins.A} — ${stats.wins.B}
+        </div>
+    `;
 
-    if (stats.turns.A === stats.turns.B) {
+    // 5. Verificación de Ganador Final
+    // Solo si ambos equipos han jugado la misma cantidad de rondas
+    if (stats.turns.A === stats.turns.B && stats.turns.A > 0) {
         if (stats.wins.A >= stats.goal && stats.wins.A > stats.wins.B) showFinalWinner(nA);
         else if (stats.wins.B >= stats.goal && stats.wins.B > stats.wins.A) showFinalWinner(nB);
     }
 
+    // 6. Renderizar Historial (Gráficos de barras)
     ["A", "B"].forEach(t => {
-        const container = document.getElementById("hist" + t); container.innerHTML = "";
+        const container = document.getElementById("hist" + t);
+        container.innerHTML = "";
         const max = Math.max(...stats.hist[t], 1);
+
         stats.hist[t].forEach((v, i) => {
-            container.innerHTML += `<div style="display:flex; align-items:center; margin: 8px 0;"><small style="width:15px">${i + 1}</small><div style="flex:1; background:#f1f5f9; height:10px; border-radius:10px; margin-left:10px; overflow:hidden;"><div style="height:100%; background:${t === 'A' ? '#3b82f6' : '#f43f5e'}; width:${(v / max) * 100}%;"></div></div></div>`;
+            const color = (t === 'A') ? '#3b82f6' : '#f43f5e';
+            container.innerHTML += `
+                <div style="display:flex; align-items:center; margin: 8px 0;">
+                    <small style="width:15px; font-weight:bold;">${i + 1}</small>
+                    <div style="flex:1; background:#f1f5f9; height:10px; border-radius:10px; margin-left:10px; overflow:hidden;">
+                        <div style="height:100%; background:${color}; width:${(v / max) * 100}%; transition: width 0.5s ease;"></div>
+                    </div>
+                </div>`;
         });
     });
 }
@@ -638,78 +737,48 @@ document.onkeydown = (e) => {
 
 resetRound();
 
-// Función para abrir el tutorial
-//function openTutorial() {
-//    const modal = document.getElementById("tutorialModal");
-//    modal.style.display = "flex";
-// Opcional: pausar el timer si el juego ya empezó
-//    if (timerStarted) {
-//        clearInterval(timerId);
-//    }
-//}
-
-// Actualizamos el botón "?" para que lance el interactivo
-function openTutorial() {
-    startInteractiveTutorial();
-}
-
-// Función para cerrar el tutorial
-function closeTutorial() {
-    document.getElementById("tutorialModal").style.display = "none";
-    localStorage.setItem('tutorialVisto', 'true');
-
-    // Opcional: reanudar el timer si el juego estaba en curso
-    if (timerStarted && !gameOver) {
-        timerStarted = false; // reset flag para que handleKey lo reinicie
-        // O llamar directamente a startTimer() si prefieres que siga solo
-    }
-}
-
-// Mostrar automáticamente solo la primera vez que entran
-document.addEventListener("DOMContentLoaded", () => {
-    // Si no ha visto el tutorial interactivo, lo lanzamos
-    if (!localStorage.getItem('tutorialInteractivoVisto')) {
-        setTimeout(startInteractiveTutorial, 1500);
-    }
-});
+// --- SISTEMA DE TUTORIAL INTEGRADO V2 ---
 
 let currentStep = 0;
 const steps = [
     {
         element: "goalBox",
         title: "Objetivo del Torneo",
-        text: "Aquí defines a cuántas partidas ganadas se termina el torneo. ¡Cuidado, no podrás cambiarlo una vez empiecen!",
-        pos: { top: "150px", left: "50%" }
+        text: "Aquí defines a cuántas partidas ganadas se termina el torneo. ¡No podrás cambiarlo una vez empiecen!",
+        pos: { top: "80px", left: "25%" } // Ajustado a la izquierda arriba
     },
     {
         element: "categorySelect",
         title: "Elige tu Categoría",
-        text: "En cada turno puedes cambiar la temática: ANIMALES, VERBOS, COMIDA... ¡Tú eliges!",
-        pos: { top: "35%", left: "50%" }
+        text: "Puedes cambiar la temática aquí. Recuerda que cada equipo solo puede repetir una categoría 2 veces.",
+        pos: { top: "80px", left: "50%" } // Ajustado al centro arriba
     },
     {
         element: "timeInput",
         title: "El Reloj Corre",
-        text: "Define cuántos segundos tiene cada equipo. Si llega a cero, el parpadeo rojo te avisará de la derrota.",
-        pos: { top: "45%", left: "50%" }
+        text: "Define los segundos por turno. Si llega a cero, el equipo pierde la ronda.",
+        pos: { top: "80px", left: "75%" } // Ajustado a la derecha arriba
     },
     {
         element: "grid",
         title: "Adivina la Palabra",
-        text: "Verde: Letra correcta. Amarillo: Letra existe pero en otro lugar. Gris: No existe.",
-        pos: { top: "60%", left: "50%" }
+        text: "Verde: Letra y posición correctas. Amarillo: Existe pero en otro lugar. Gris: No existe.",
+        pos: { top: "50%", left: "50%" } // Centro para el tablero
     }
 ];
 
-//function startInteractiveTutorial() {
-//  currentStep = 0;
-//  document.getElementById("tutorialOverlay").style.display = "flex";
-//  showStep();
-//}
+function openRulesModal() {
+    document.getElementById("tutorialModal").style.display = "flex";
+}
+
+function closeTutorial() {
+    document.getElementById("tutorialModal").style.display = "none";
+    localStorage.setItem('tutorialVisto', 'true');
+}
 
 function startInteractiveTutorial() {
     currentStep = 0;
-    // Cerramos el de colores por si estuviera abierto
+    // Cerramos cualquier otro modal abierto
     document.getElementById("tutorialModal").style.display = "none";
     document.getElementById("tutorialOverlay").style.display = "flex";
     showStep();
@@ -730,7 +799,7 @@ function showStep() {
     if (target) {
         target.classList.add("highlight-focus");
 
-        // Scroll automático (Vital para móvil)
+        // Scroll automático
         target.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
         // 2. Lógica de la Flecha
@@ -738,20 +807,20 @@ function showStep() {
         arrow.style.display = "block";
         arrow.style.left = (rect.left + rect.width / 2 - 12) + "px";
 
-        // Decidir si la flecha va arriba o abajo del elemento
         if (rect.top > 300) {
             arrow.style.top = (rect.top - 30) + "px";
-            arrow.style.setProperty('--rot', '180deg'); // Apunta hacia abajo
+            arrow.style.setProperty('--rot', '180deg');
         } else {
             arrow.style.top = (rect.bottom + 15) + "px";
-            arrow.style.setProperty('--rot', '0deg'); // Apunta hacia arriba
+            arrow.style.setProperty('--rot', '0deg');
         }
 
-        // 3. Posicionar tarjeta SOLO SI ES PC
+        // 3. Posicionar tarjeta (Se ajusta al nuevo layout)
         if (window.innerWidth > 768) {
             card.style.top = step.pos.top;
             card.style.left = step.pos.left;
             card.style.transform = "translateX(-50%)";
+            card.style.position = "fixed";
         }
     }
 
@@ -760,47 +829,27 @@ function showStep() {
     document.getElementById("btnNextStep").innerText = (currentStep === steps.length - 1) ? "¡A JUGAR!" : "Siguiente";
 }
 
-//function nextStep() {
-//    currentStep++;
-//    if (currentStep < steps.length) {
-//        showStep();
-//    } else {
-//        skipTutorial();
-//    }
-//}
-
 function nextStep() {
     currentStep++;
     if (currentStep < steps.length) {
         showStep();
     } else {
-        finishStepTutorial(); // <--- Nueva función para conectar
+        finishStepTutorial();
     }
 }
 
 function finishStepTutorial() {
     document.getElementById("tutorialOverlay").style.display = "none";
     document.getElementById("tutorialArrow").style.display = "none";
-    // Quitar brillos
     steps.forEach(s => {
         const el = document.getElementById(s.element);
         if (el) el.classList.remove("highlight-focus");
     });
-    // ABRIR EL SEGUNDO TUTORIAL (Colores)
-    document.getElementById("tutorialModal").style.display = "flex";
+    // Al terminar el interactivo, abrimos el de los colores (Gris/Verde/Amarillo)
+    openRulesModal();
     localStorage.setItem('tutorialInteractivoVisto', 'true');
-    localStorage.setItem('tutorialVisto', 'true'); // Marcamos ambos como vistos
+    localStorage.setItem('tutorialVisto', 'true');
 }
-
-//function skipTutorial() {
-//    document.getElementById("tutorialOverlay").style.display = "none";
-// Quitar cualquier brillo restante
-//    steps.forEach(s => {
-//        const el = document.getElementById(s.element);
-//        if (el) el.classList.remove("highlight-focus");
-//    });
-//    localStorage.setItem('tutorialInteractivoVisto', 'true');
-//}
 
 function skipTutorial() {
     document.getElementById("tutorialOverlay").style.display = "none";
@@ -812,6 +861,13 @@ function skipTutorial() {
     localStorage.setItem('tutorialInteractivoVisto', 'true');
     localStorage.setItem('tutorialVisto', 'true');
 }
+
+// Auto-inicio
+document.addEventListener("DOMContentLoaded", () => {
+    if (!localStorage.getItem('tutorialInteractivoVisto')) {
+        setTimeout(startInteractiveTutorial, 1000);
+    }
+});
 
 // --- BLOQUEO DE REINICIO POR TECLADO ---
 window.addEventListener('keydown', function (e) {
@@ -842,5 +898,22 @@ window.addEventListener('beforeunload', function (e) {
         e.returnValue = '';
     }
 });
+function toggleTheme() {
+    const body = document.body;
+    body.classList.toggle("dark-mode");
+    
+    const isDark = body.classList.contains("dark-mode");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+}
 
+// Cargar el tema preferido al abrir la página
+document.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+        document.body.classList.add("dark-mode");
+    } else {
+        // Por defecto será Claro si no hay nada guardado o es "light"
+        document.body.classList.remove("dark-mode");
+    }
+});
 
