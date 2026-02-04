@@ -183,68 +183,6 @@ if (!stats.categoryUsage) {
 
 let showingCategory = false;
 
-/*async function showCategoryRoulette() {
-    showingCategory = true;
-    gameOver = true; // Bloquea entrada
-
-    const catDisplay = document.getElementById("categorySelect");
-    const msgDisplay = document.getElementById("message");
-
-    // Bloquear visualmente el select para que no intenten cambiarlo mientras gira
-    catDisplay.disabled = true;
-
-    msgDisplay.innerText = "🎲 SORTEANDO CATEGORÍA...";
-    catDisplay.classList.add("roulette-anim");
-
-    const totalJumps = 25;
-
-    for (let i = 0; i < totalJumps; i++) {
-        // Efecto visual aleatorio
-        const tempCat = playableCategories[Math.floor(Math.random() * playableCategories.length)];
-        catDisplay.value = tempCat;
-
-        // Sonido
-        // Nota: El catch evita errores en consola si el navegador bloquea el autoplay inicial
-        soundTick.currentTime = 0;
-        soundTick.volume = 0.5;
-        soundTick.play().catch(e => console.log("Audio bloqueado por navegador (falta interacción)"));
-
-        // Delay progresivo (Suspenso)
-        let delay = 100 + (i * 12); // Un poco más lento al final
-        await new Promise(resolve => setTimeout(resolve, delay));
-    }
-
-    // --- SELECCIÓN FINAL ---
-    const finalCategory = pickRandomCategory();
-    stats.category = finalCategory;
-    catDisplay.value = finalCategory;
-
-    // Guardamos estado inmediatamente por si recargan
-    saveStats();
-
-    // Sonido Final
-    soundDing.play().catch(e => { });
-
-    // Estilos de Éxito
-    catDisplay.classList.remove("roulette-anim");
-    catDisplay.style.backgroundColor = "#22c55e";
-    catDisplay.style.color = "#fff";
-    msgDisplay.innerText = `¡CATEGORÍA: ${finalCategory}!`;
-
-    // Pausa dramática antes de permitir jugar
-    setTimeout(() => {
-        catDisplay.style.backgroundColor = "";
-        catDisplay.style.color = "";
-        msgDisplay.innerText = ""; // Limpiar mensaje
-
-        // Reactivamos controles (pero startTimer los volverá a bloquear al teclear)
-        catDisplay.disabled = false;
-        showingCategory = false;
-        gameOver = false;
-
-        pickNewWord(); // Generar palabra y preparar juego
-    }, 3000); // 2 segundos para leer la categoría
-}*/
 
 async function showCategoryRoulette() {
     showingCategory = true;
@@ -407,25 +345,6 @@ function hardReset() {
 }
 
 // Función auxiliar para elegir palabra
-/* function pickNewWord() {
-    let categoryList = wordSets[stats.category] || wordSets["GENERAL"];
-
-    // Filtramos palabras ya usadas en CUALQUIER momento del torneo
-    const availableWords = categoryList.filter(word => !stats.usedWords.includes(word));
-
-    if (availableWords.length === 0) {
-        // Si se acaban las de la categoría, reciclamos (o podrías mostrar alerta)
-        secret = categoryList[Math.floor(Math.random() * categoryList.length)];
-    } else {
-        secret = availableWords[Math.floor(Math.random() * availableWords.length)];
-    }
-
-    // La registramos como usada
-    stats.usedWords.push(secret);
-    console.log("Nueva palabra (" + stats.category + "): " + secret);
-} */
-
-// --- SELECCIÓN DE PALABRA ---
 function pickNewWord() {
     // Validación de seguridad: si la categoría no existe, usar GENERAL
     if (!wordSets[stats.category]) stats.category = "GENERAL";
@@ -451,36 +370,6 @@ function pickNewWord() {
 }
 
 
-/* 
-function resetRound() {
-    clearInterval(timerId);
-    timerStarted = false;
-    timeLeft = stats.timeLimit;
-    gameOver = false;
-    attempt = 0;
-    guess = "";
-
-    // Seleccionamos palabra basada en la configuración actual
-    pickNewWord();
-    saveStats();
-
-    // Reset visual
-    document.getElementById("timer").innerText = timeLeft;
-    document.getElementById("timer").style.color = "";
-    document.getElementById("timer").classList.remove("active");
-    document.getElementById("message").innerText = "";
-    document.getElementById("grid").innerHTML = "";
-    for (let i = 0; i < 30; i++) document.getElementById("grid").innerHTML += `<div class="cell"></div>`;
-
-    // HABILITAR CONTROLES (Para que puedan cambiar categoría antes de jugar)
-    document.getElementById("btnNext").disabled = false;
-    document.getElementById("categorySelect").disabled = false;
-    document.getElementById("timeInput").disabled = false;
-    document.getElementById("settingsBox").classList.remove("locked");
-
-    renderKeyboard();
-    renderUI();
-} */
 
 function resetRound() {
     clearInterval(timerId);
