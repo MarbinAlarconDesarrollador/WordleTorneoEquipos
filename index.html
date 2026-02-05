@@ -22,7 +22,7 @@
         </div>
 
         <div class="settings-bar" id="settingsBox">
-            <div class="setting-item">
+            <div id="categoryBox" class="setting-item">
                 <label for="categorySelect">CATEGORÍA:</label>
                 <select id="categorySelect" onchange="updateCategoryParams()">
                     <option value="GENERAL">GENERAL (MIXTO)</option>
@@ -40,13 +40,15 @@
                 <input type="number" id="timeInput" value="120" min="30" max="300" onchange="updateCategoryParams()">
                 <span>SEGUNDOS</span>
             </div>
-            <div class="setting-item">
-                <button class="help-btn" onclick="startInteractiveTutorial()" title="Cómo jugar">?</button>
-                <button id="themeToggle" class="help-btn" onclick="toggleTheme()" title="Modo Oscuro / Claro"
+
+            <div class="boxHelp">
+                <button class="setting-help" onclick="startInteractiveTutorial()" title="Cómo jugar">?</button>
+                <button id="themeToggle" class="setting-help" onclick="toggleTheme()" title="Modo Oscuro / Claro"
                     style="background: #64748b;">
                     🌓
                 </button>
             </div>
+
 
         </div>
     </div>
