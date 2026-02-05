@@ -758,7 +758,7 @@ select {
 
 /* ===== BLOQUES ===== */
 #goalBox {
-  justify-self: start;
+  justify-self: center;
 }
 
 #categoryBox {
