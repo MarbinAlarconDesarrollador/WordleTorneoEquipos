@@ -14,10 +14,7 @@
 <body>
 
     <div class="top-bar-container">
-        <button class="help-btn" onclick="startInteractiveTutorial()" title="Cómo jugar">?</button>
-        <button id="themeToggle" class="help-btn" onclick="toggleTheme()" style="background: #64748b;">
-            🌓
-        </button>
+
         <div id="goalBox" class="tournament-goal">
             <span>META:</span>
             <input type="number" id="goalInput" value="5" min="1" onchange="saveGoal()">
@@ -43,6 +40,14 @@
                 <input type="number" id="timeInput" value="120" min="30" max="300" onchange="updateCategoryParams()">
                 <span>SEGUNDOS</span>
             </div>
+            <div class="setting-item">
+                <button class="help-btn" onclick="startInteractiveTutorial()" title="Cómo jugar">?</button>
+                <button id="themeToggle" class="help-btn" onclick="toggleTheme()" title="Modo Oscuro / Claro"
+                    style="background: #64748b;">
+                    🌓
+                </button>
+            </div>
+
         </div>
     </div>
 

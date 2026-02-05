@@ -742,3 +742,156 @@ select {
 .dark-mode .fair-play strong {
     color: #fff;
 }
+
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.top-bar-container {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 10px;
+  padding: 12px 16px;
+
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border-color);
+}
+
+
+/* ===== FILA 1 ===== */
+#goalBox {
+  grid-column: 1 / 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+#settingsBox {
+  grid-column: 2 / 3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+
+/* ===== FILA 2 ===== */
+.settings-bar .setting-item:first-child {
+  grid-column: 1 / -1;
+}
+
+.settings-bar {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 10px;
+  align-items: center;
+}
+
+
+/* ===== INPUTS ===== */
+.tournament-goal input,
+#timeInput {
+  width: 60px;
+  padding: 4px 6px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: inherit;
+  text-align: center;
+  font-weight: 600;
+}
+
+#categorySelect {
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: inherit;
+  font-weight: 600;
+}
+
+
+/* ===== BOTONES TIPO APP ===== */
+.help-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 16px;
+  font-weight: bold;
+
+  background: #334155;
+  color: white;
+
+  transition: all 0.2s ease;
+}
+
+.help-btn:hover {
+  transform: scale(1.08);
+  background: #475569;
+}
+
+
+/* ===== TABLET ===== */
+@media (max-width: 768px) {
+  .top-bar-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+  }
+
+  #goalBox,
+  #settingsBox,
+  .settings-bar {
+    grid-column: 1 / -1;
+    justify-content: space-between;
+  }
+
+  .settings-bar {
+    grid-template-columns: 1fr 80px 80px;
+  }
+}
+
+
+/* ===== MÓVIL ===== */
+@media (max-width: 480px) {
+  .top-bar-container {
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .settings-bar {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  #settingsBox {
+    justify-content: flex-end;
+    gap: 6px;
+  }
+
+  .help-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 14px;
+  }
+}
+
+
+/* ===== MÓVIL PEQUEÑO ===== */
+@media (max-width: 360px) {
+  .tournament-goal input,
+  #timeInput {
+    width: 52px;
+  }
+
+  #categorySelect {
+    font-size: 0.85rem;
+  }
+}
