@@ -192,7 +192,7 @@ async function showCategoryRoulette() {
     const msgDisplay = document.getElementById("message");
 
     catDisplay.disabled = true;
-    msgDisplay.innerText = "🎲 SORTEANDO CATEGORÍA...";
+    msgDisplay.innerText = "🎲 🎲 🎲 SORTEANDO CATEGORÍA...";
     catDisplay.classList.add("roulette-anim");
 
     const totalJumps = 25;
@@ -242,7 +242,7 @@ async function showCategoryRoulette() {
         gameOver = false;
         categoriaRegistradaEnRonda = false; // Reset para la nueva ronda
         pickNewWord();
-    }, 3500); // Un poco más de tiempo para leer el aviso
+    }, 3500); // tiempo para leer el aviso
 }
 
 // Parches de compatibilidad
@@ -409,7 +409,7 @@ function renderUI() {
     document.getElementById("turnStatA").innerText = "Partidas: " + stats.turns.A;
     document.getElementById("turnStatB").innerText = "Partidas: " + stats.turns.B;
 
-    // 2. LÓGICA DEL NUEVO INDICADOR DE TURNO (El banner llamativo)
+    // 2. LÓGICA DEL INDICADOR DE TURNO 
     const indicator = document.getElementById("turnIndicator");
     const nameSpan = document.getElementById("activePlayerName");
 
@@ -557,7 +557,7 @@ function submit() {
         createConfetti();
         stats.wins[stats.current]++;
         stats.hist[stats.current][attempt]++;
-        soundWin.play(); // <--- AÑADIR ESTA LÍNEA
+        soundWin.play(); 
         //end("¡PUNTO!");
         // --- CAMBIO AQUÍ: Mensaje Personalizado ---
         const msgs = victoryMessages[stats.category] || victoryMessages["GENERAL"];
@@ -660,7 +660,7 @@ const steps = [
         element: "grid",
         title: "Adivina la Palabra",
         text: "Verde: Letra y posición correctas. Amarillo: Existe pero en otro lugar. Gris: No existe.",
-        pos: { top: "50%", left: "30%" } // Centro para el tablero
+        pos: { top: "50%", left: "30%" } // Izquierda para el tablero
     }
 ];
 
