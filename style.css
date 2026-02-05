@@ -42,6 +42,30 @@ body {
     overflow-x: hidden;
 }
 
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+
+  background-image: url("./img/logo.png");
+  background-repeat: repeat;
+  background-position: center;
+  background-size:  min(250px, 40vw);
+  
+  opacity: 0.04;              /* 🔥 sutil */
+  pointer-events: none;       /* 🔒 no bloquea clics */
+  z-index: 0;
+}
+
+.top-bar-container,
+.grid,
+.keyboard,
+.modal-overlay {
+  position: relative;
+  z-index: 1;
+}
+
+
 /* --- BARRA SUPERIOR DE CONTROL (Dashboard Style) --- */
 /* Agrupamos visualmente el botón de ayuda, objetivo y settings */
 /*.top-bar-container {
@@ -919,5 +943,11 @@ select {
 
   .setting-help {
     justify-self: end;
+  }
+}
+@media (max-width: 480px) {
+  body::before {
+    background-size: 70vw;
+    opacity: 0.03;
   }
 }
