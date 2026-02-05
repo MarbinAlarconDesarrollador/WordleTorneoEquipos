@@ -156,7 +156,7 @@ const defeatMessages = {
 const allWords = [...new Set(Object.values(wordSets).flat())];
 
 // --- 2. GESTIÓN DE ESTADO ---
-let stats = JSON.parse(localStorage.getItem('wordleElite_Final_V8')) || {
+let stats = JSON.parse(localStorage.getItem('wordleElite_Final_V9')) || {
     wins: { A: 0, B: 0 },
     turns: { A: 0, B: 0 },
     hist: { A: [0, 0, 0, 0, 0, 0], B: [0, 0, 0, 0, 0, 0] },
@@ -318,7 +318,7 @@ function saveNames() {
 
 
 function saveStats() {
-    localStorage.setItem('wordleElite_Final_V8', JSON.stringify(stats));
+    localStorage.setItem('wordleElite_Final_V9', JSON.stringify(stats));
     renderUI();
 }
 
