@@ -465,25 +465,7 @@ function renderUI() {
         else if (stats.wins.B >= stats.goal && stats.wins.B > stats.wins.A) showFinalWinner(nB);
     }
 
-    // 6. Renderizar Historial (Gráficos de barras)
-   /*["A", "B"].forEach(t => {
-        const container = document.getElementById("hist" + t);
-        container.innerHTML = "";
-        const max = Math.max(...stats.hist[t], 1);
-
-        stats.hist[t].forEach((v, i) => {
-            const color = (t === 'A') ? '#3b82f6' : '#f43f5e';
-            container.innerHTML += `
-                <div style="display:flex; align-items:center; margin: 8px 0;">
-                    <small style="width:15px; font-weight:bold;">${i + 1}</small>
-                    <div style="flex:1; background:#f1f5f9; height:10px; border-radius:10px; margin-left:10px; overflow:hidden;">
-                        <div style="height:100%; background:${color}; width:${(v / max) * 100}%; transition: width 0.5s ease;"></div>
-                    </div>
-                </div>`;
-        });
-    });*/
-
-    
+    // 6. Renderizar Historial (Gráficos de barras) 
     window.lastWinsRendered = window.lastWinsRendered || { A: null, B: null };
 
 ["A", "B"].forEach(t => {
@@ -695,7 +677,7 @@ const steps = [
         element: "goalBox",
         title: "Objetivo del Torneo",
         text: "Aquí defines a cuántas partidas ganadas se termina el torneo. ¡No podrás cambiarlo una vez empiecen!",
-        pos: { top: "80px", left: "25%" } // Ajustado a la izquierda arriba
+        pos: { top: "80px", left: "50%" } // Ajustado a la izquierda arriba
     },
     {
         element: "categorySelect",
@@ -707,7 +689,7 @@ const steps = [
         element: "timeInput",
         title: "El Reloj Corre",
         text: "Define los segundos por turno. Si llega a cero, el equipo pierde la ronda.",
-        pos: { top: "80px", left: "75%" } // Ajustado a la derecha arriba
+        pos: { top: "80px", left: "50%" } // Ajustado a la derecha arriba
     },
     {
         element: "grid",

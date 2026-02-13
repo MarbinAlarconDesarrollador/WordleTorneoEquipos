@@ -416,6 +416,7 @@ select {
     gap: 6px;
     width: 100%;
     max-width: 500px;
+    /*box-shadow: 0 10px 25px rgba(25, 10, 220, 6.1);*/
 }
 
 .keyboard-row {
@@ -436,6 +437,7 @@ select {
     font-size: 0.9rem;
     transition: 0.2s;
     min-width: 30px;
+    /*box-shadow: 0 10px 25px rgba(225, 110, 220, 3.1);*/
 }
 
 .key:hover {
@@ -453,6 +455,60 @@ select {
 .key.absent {
     background-color: #1e293b;
     opacity: 0.5;
+}
+
+/* Seleccionamos las teclas que AÚN NO se han jugado */
+.key:not(.correct):not(.present):not(.absent) {
+    background-color: #1e293b;
+    /* Fondo oscuro base */
+    color: white;
+    border: 1px solid transparent;
+    animation: rgbGlow 6s infinite alternate;
+    /* Animación infinita */
+}
+
+/* Desfasamos los tiempos para crear un efecto de "ola" de colores */
+.key:nth-child(5n+1):not(.correct):not(.present):not(.absent) {
+    animation-delay: 0s;
+}
+
+.key:nth-child(5n+2):not(.correct):not(.present):not(.absent) {
+    animation-delay: -1s;
+}
+
+.key:nth-child(5n+3):not(.correct):not(.present):not(.absent) {
+    animation-delay: -2s;
+}
+
+.key:nth-child(5n+4):not(.correct):not(.present):not(.absent) {
+    animation-delay: -3s;
+}
+
+.key:nth-child(5n+5):not(.correct):not(.present):not(.absent) {
+    animation-delay: -4s;
+}
+
+/* La magia de la luz: Cambiamos colores y brillo */
+@keyframes rgbGlow {
+    0% {
+        border-color: #00f3ff;
+        box-shadow: 0 0 10px #00f3ff80, inset 0 0 5px #00f3ff30;
+    }
+
+    33% {
+        border-color: #ff00ea;
+        box-shadow: 0 0 10px #ff00ea80, inset 0 0 5px #ff00ea30;
+    }
+
+    66% {
+        border-color: #00ff66;
+        box-shadow: 0 0 10px #00ff6680, inset 0 0 5px #00ff6630;
+    }
+
+    100% {
+        border-color: #ffaa00;
+        box-shadow: 0 0 10px #ffaa0080, inset 0 0 5px #ffaa0030;
+    }
 }
 
 /* Botón Siguiente */
@@ -650,22 +706,28 @@ select {
         width: 100%;
         min-height: auto;
         flex-direction: row;
-        /* Poner nombre y stats en linea */
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         padding: 10px 15px;
         margin-bottom: 10px;
+        display: inline-grid;
+        place-items: center;
+        align-content: stretch;
+        justify-items: center;
     }
 
     .side-d {
-        width: 100%;
+       width: 100%;
         min-height: auto;
         flex-direction: row;
-        /* Poner nombre y stats en linea */
-        justify-content: space-between;
         align-items: center;
         padding: 10px 15px;
         margin-bottom: 10px;
+        display: inline-grid;
+        place-items: center;
+        align-content: space-between;
+        justify-content: space-around;
+        justify-items: center;
     }
 
     .team-name {
@@ -738,15 +800,15 @@ select {
     position: relative;
     z-index: 1001 !important;
     /* Por encima del overlay oscuro */
-    background-color: #1e293b !important;
-    box-shadow: 0 0 20px 10px rgba(59, 130, 246, 0.5);
-    border-radius: 8px;
+    background-color: #3366cc !important;
+    box-shadow: 0 0 20px 10px rgb(156, 146, 146);
+    border-radius: 10px;
     pointer-events: none;
     /* Evita que el usuario toque mientras está en tutorial */
 }
 
 .tutorial-overlay {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(244, 247, 249, 0.6);
     z-index: 1000;
 }
 
@@ -1132,6 +1194,6 @@ select {
 }
 
 #nextRoundBtn {
-    transition: all 0.3s ease; /* Para que el cambio de opacidad sea suave */
+    transition: all 0.3s ease;
+    /* Para que el cambio de opacidad sea suave */
 }
-
