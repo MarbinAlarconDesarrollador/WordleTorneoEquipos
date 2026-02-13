@@ -156,7 +156,7 @@ const defeatMessages = {
 const allWords = [...new Set(Object.values(wordSets).flat())];
 
 // --- 2. GESTIÓN DE ESTADO ---
-let stats = JSON.parse(localStorage.getItem('wordleElite_Final_V9')) || {
+let stats = JSON.parse(localStorage.getItem('wordleElite_V11')) || {
     wins: { A: 0, B: 0 },
     turns: { A: 0, B: 0 },
     hist: { A: [0, 0, 0, 0, 0, 0], B: [0, 0, 0, 0, 0, 0] },
@@ -265,17 +265,29 @@ function startTimer() {
     document.getElementById("timeInput").disabled = true;
 
     document.getElementById("timer").classList.add("active");
+    // Nos aseguramos de que empiece en el color normal
+    document.getElementById("timer").style.color = ""; 
 
     timerId = setInterval(() => {
         if (gameOver) { clearInterval(timerId); return; }
+        
         timeLeft--;
         document.getElementById("timer").innerText = timeLeft;
+        
+        // Cambiar a rojo cuando queden 10 segundos
+        if (timeLeft <= 10) {
+            document.getElementById("timer").style.color = "#ef4444";
+        }
 
-        if (timeLeft <= 10) document.getElementById("timer").style.color = "#ef4444";
-
+        // CORRECCIÓN AQUÍ: Evaluamos 'timeLeft' y limpiamos el intervalo
         if (timeLeft <= 0) {
-            clearInterval(timerId);
-            end("TIEMPO AGOTADO: " + secret);
+            clearInterval(timerId); // Detenemos el reloj para que no pase a negativo
+            
+            const defeatMsgs = (typeof defeatMessages !== 'undefined' && defeatMessages.TIMEOUT) 
+                                ? defeatMessages.TIMEOUT 
+                                : ["¡El tiempo se agotó!", "¡Qué mala suerte, tiempo fuera!"];
+                                
+            end(`❌ ${defeatMsgs[Math.floor(Math.random() * defeatMsgs.length)]} ERA: ${secret}`);
         }
     }, 1000);
 }
@@ -318,7 +330,7 @@ function saveNames() {
 
 
 function saveStats() {
-    localStorage.setItem('wordleElite_Final_V9', JSON.stringify(stats));
+    localStorage.setItem('wordleElite_V11', JSON.stringify(stats));
     renderUI();
 }
 
@@ -454,7 +466,7 @@ function renderUI() {
     }
 
     // 6. Renderizar Historial (Gráficos de barras)
-    ["A", "B"].forEach(t => {
+   /*["A", "B"].forEach(t => {
         const container = document.getElementById("hist" + t);
         container.innerHTML = "";
         const max = Math.max(...stats.hist[t], 1);
@@ -469,7 +481,48 @@ function renderUI() {
                     </div>
                 </div>`;
         });
-    });
+    });*/
+
+    
+    window.lastWinsRendered = window.lastWinsRendered || { A: null, B: null };
+
+["A", "B"].forEach(t => {
+    const container = document.getElementById("hist" + t);
+    if (!container) return;
+
+    const wins = (stats?.wins?.[t]) ?? 0;
+
+    if (window.lastWinsRendered[t] === wins) return;
+    window.lastWinsRendered[t] = wins;
+
+    container.innerHTML = "";
+
+    const trophies = Math.floor(wins / 10);
+    const stars = wins % 10;
+
+    for (let i = 0; i < trophies; i++) {
+        container.innerHTML += `<span class="trophy">🏆</span>`;
+    }
+
+    for (let i = 0; i < stars; i++) {
+        container.innerHTML += `<span class="star">⭐</span>`;
+    }
+
+    if (wins === 0) {
+        const mensajes = [
+            "🐵 ¿Se quedaron dormidos? 😴",
+            "😅 Vamos equipo, aún hay tiempo...",
+            "🤔 Estrategia secreta o qué?",
+            "💀 Buscando la primera victoria...",
+            "🔥 ¡La remontada será legendaria!"
+        ];
+
+        const random = mensajes[Math.floor(Math.random() * mensajes.length)];
+        container.innerHTML = `<span class="no-wins">${random}</span>`;
+    }
+});
+
+    
 }
 
 function showFinalWinner(name) {

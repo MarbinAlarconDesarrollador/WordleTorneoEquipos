@@ -43,26 +43,28 @@ body {
 }
 
 body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
+    content: "";
+    position: fixed;
+    inset: 0;
 
-  background-image: url("./img/logo.png");
-  background-repeat: repeat;
-  background-position: center;
-  background-size:  min(250px, 40vw);
-  
-  opacity: 0.04;              /* 🔥 sutil */
-  pointer-events: none;       /* 🔒 no bloquea clics */
-  z-index: 0;
+    background-image: url("./img/logo.png");
+    background-repeat: repeat;
+    background-position: center;
+    background-size: min(250px, 40vw);
+
+    opacity: 0.04;
+    /* 🔥 sutil */
+    pointer-events: none;
+    /* 🔒 no bloquea clics */
+    z-index: 0;
 }
 
 .top-bar-container,
 .grid,
 .keyboard,
 .modal-overlay {
-  position: relative;
-  z-index: 1;
+    position: relative;
+    z-index: 1;
 }
 
 
@@ -147,45 +149,121 @@ select {
     filter: grayscale(1);
 }
 
-/* --- LAYOUT PRINCIPAL (GRID 3 COLUMNAS) --- */
+/* --- LAYOUT PRINCIPAL (GRID 3 COLUMNAS) --- 
 .layout {
-    display: grid;
-    /* Columna Izq (250px) - Centro (Flexible) - Columna Der (250px) */
+    display: grid; /* Columna Izq (250px) - Centro (Flexible) - Columna Der (250px) 
     grid-template-columns: 280px 1fr 280px;
     gap: 20px;
     padding: 10px 20px;
-    flex-grow: 1;
-    /* Ocupa el espacio restante */
+    flex-grow: 1;/* Ocupa el espacio restante 
     max-width: 1400px;
     margin: 0 auto;
     width: 100%;
-    align-items: start;
-    /* Alineación superior */
+    align-items: start; /* Alineación superior 
+}
+*/
+.layout {
+    position: relative;
+    /* Para permitir que los hijos se posicionen respecto a este contenedor */
+    display: block;
+    /* Quitamos el grid de columnas anterior */
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: 600px;
+    padding: 20px;
 }
 
-/* --- PANELES LATERALES (EQUIPOS) --- */
+/* --- PANELES LATERALES (EQUIPOS) --- 
 .side {
-    /*background-color: #1e293b;*/
+    /*background-color: #1e293b;
     padding: 20px;
     border-radius: 12px;
     border: 1px solid #334155;
     height: fit-content;
     min-height: 400px;
-    /* Altura mínima visual */
+    /* Altura mínima visual 
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
     background-color: var(--bg-panel);
     border-color: var(--border-color);
 }
+*/
+
+.side-d {
+    position: absolute;
+    top: 50px;
+    width: 320px;
+    z-index: 10;
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 500px;
+    flex-wrap: nowrap;
+    align-content: stretch;
+    justify-content: space-evenly;
+}
+
+.side-i {
+    position: absolute;
+    /* Las sacamos del flujo para que no empujen al juego */
+    top: 50px;
+    /* Ajusta según qué tan arriba las quieras */
+    width: 320px;
+    /* Ancho fijo de la tarjeta */
+    z-index: 10;
+    /* Por encima del juego */
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 500px;
+}
+
+/* Posición específica para cada equipo */
+.layout .side-d:nth-child(1) {
+    left: 20px;
+    /* Equipo A a la izquierda */
+}
+
+.layout .side-d:nth-child(3) {
+    right: 20px;
+    /* Equipo B a la derecha */
+}
+
+.layout .side-i:nth-child(1) {
+    left: 20px;
+    /* Equipo A a la izquierda */
+}
+
+.layout .side-i:nth-child(3) {
+    right: 20px;
+    /* Equipo B a la derecha */
+}
+
 
 .team-name {
-    text-align: center;
+    /* text-align: center;
     font-size: 1.3rem;
     margin-bottom: 10px;
     padding-bottom: 10px;
-    border-bottom: 2px solid;
+    border-bottom: 2px solid;*/
     /* color: #f8fafc;*/
+    width: 100%;
+    text-align: center;
+    border-bottom: 2px solid;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
 }
 
 #nameA {
@@ -211,7 +289,10 @@ select {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    /* justify-content: flex-start;*/
+    width: 100%;
+    position: relative;
+    z-index: 1;
 }
 
 /* Banner de turno mejorado */
@@ -268,6 +349,13 @@ select {
 #timer.active {
     color: #22c55e;
     text-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+}
+
+#scoreHeader {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #e2e8f0;
+    margin-bottom: 5px;
 }
 
 /* GRID DEL JUEGO */
@@ -558,7 +646,18 @@ select {
         padding: 10px;
     }
 
-    .side {
+    .side-i {
+        width: 100%;
+        min-height: auto;
+        flex-direction: row;
+        /* Poner nombre y stats en linea */
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+    }
+
+    .side-d {
         width: 100%;
         min-height: auto;
         flex-direction: row;
@@ -598,18 +697,26 @@ select {
         margin-bottom: 20px;
     }
 
-    .side:nth-child(1) {
+    .side-i:nth-child(1) {
         order: 2;
         border-left: 5px solid #3b82f6;
     }
 
-    /* Equipo A */
-    .side:nth-child(3) {
+    .side-i:nth-child(3) {
         order: 3;
         border-left: 5px solid #f43f5e;
     }
 
-    /* Equipo B */
+    .side-d:nth-child(1) {
+        order: 2;
+        border-left: 5px solid #3b82f6;
+    }
+
+    .side-d:nth-child(3) {
+        order: 3;
+        border-left: 5px solid #f43f5e;
+    }
+
 }
 
 /* Móviles pequeños */
@@ -755,11 +862,13 @@ select {
 /* Específicamente cuando el body tiene .dark-mode */
 .dark-mode .modal-content h2,
 .dark-mode .modal-content p {
-    color: #f1f5f9; /* Un blanco azulado suave para no cansar la vista */
+    color: #f1f5f9;
+    /* Un blanco azulado suave para no cansar la vista */
 }
 
 .dark-mode .fair-play {
-    background: rgba(255, 255, 255, 0.05); /* Fondo claro sutil sobre negro */
+    background: rgba(255, 255, 255, 0.05);
+    /* Fondo claro sutil sobre negro */
     color: #cbd5e1;
 }
 
@@ -769,108 +878,109 @@ select {
 
 /* ===== TOP BAR GRID REAL ===== */
 .top-bar-container {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 12px;
-  padding: 12px 16px;
-  align-items: center;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    padding: 12px 16px;
+    align-items: center;
 
-  background: var(--bg-panel);
-  border-bottom: 1px solid var(--border-color);
+    background: var(--bg-panel);
+    border-bottom: 1px solid var(--border-color);
 }
 
 
 /* ===== BLOQUES ===== */
 #goalBox {
-  justify-self: center;
+    justify-self: center;
 }
 
 #categoryBox {
-  width: 100%;
+    width: 100%;
 }
 
 #settingsBox {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-self: end;
 }
 
 
 /* ===== SELECT CATEGORÍA ===== */
 #categorySelect {
-  width: 100%;
-  padding: 8px 12px;
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  background: transparent;
-  color: inherit;
-  font-weight: 600;
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    background: transparent;
+    color: inherit;
+    font-weight: 600;
 }
 
 
 /* ===== BOTONES HELP ===== */
 .setting-help {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  font-size: 16px;
-  font-weight: bold;
+    font-size: 16px;
+    font-weight: bold;
 
-  background: #334155;
-  color: white;
-  transition: all 0.2s ease;
+    background: #334155;
+    color: white;
+    transition: all 0.2s ease;
 }
 
 .setting-help:hover {
-  transform: scale(1.08);
-  background: #475569;
+    transform: scale(1.08);
+    background: #475569;
 }
 
 /*NUEVO RESPONSIVE*/
 
 /* ===== TOP BAR BASE ===== */
 .top-bar-container {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 12px;
-  padding: 12px 16px;
-  align-items: center;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    padding: 12px 16px;
+    align-items: center;
 
-  background: var(--bg-panel);
-  border-bottom: 1px solid var(--border-color);
+    background: var(--bg-panel);
+    border-bottom: 1px solid var(--border-color);
 }
 
 
 /* ===== SETTINGS INTERNOS ===== */
 #settingsBox {
-  display: grid;
-  grid-template-columns: 1fr auto auto auto;
-  gap: 10px;
-  align-items: center;
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    gap: 10px;
+    align-items: center;
 }
 
 
 /* ===== CATEGORÍA FLEXIBLE ===== */
 #categoryBox {
-  min-width: 0; /* 🔥 clave para que no se rompa */
+    min-width: 0;
+    /* 🔥 clave para que no se rompa */
 }
 
 #categorySelect {
-  width: 100%;
-  padding: 8px 12px;
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  background: transparent;
-  color: inherit;
-  font-weight: 600;
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    background: transparent;
+    color: inherit;
+    font-weight: 600;
 }
 
 .boxHelp {
@@ -879,75 +989,149 @@ select {
 
 /* ===== BOTONES ===== */
 .setting-help {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  font-size: 16px;
-  font-weight: bold;
+    font-size: 16px;
+    font-weight: bold;
 
-  background: #334155;
-  color: white;
-  transition: all 0.2s ease;
+    background: #334155;
+    color: white;
+    transition: all 0.2s ease;
 }
 
 .setting-help:hover {
-  transform: scale(1.08);
-  background: #475569;
+    transform: scale(1.08);
+    background: #475569;
 }
 
 /* ===== TABLET ===== */
 @media (max-width: 768px) {
 
-  .top-bar-container {
-    grid-template-columns: 1fr;
-  }
+    .top-bar-container {
+        grid-template-columns: 1fr;
+    }
 
-  #settingsBox {
-    grid-template-columns: 1fr auto auto auto;
-  }
+    #settingsBox {
+        grid-template-columns: 1fr auto auto auto;
+    }
 }
 
 
 /* ===== MÓVIL ===== */
 @media (max-width: 480px) {
 
-  .top-bar-container {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
+    .top-bar-container {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
 
-  /* settings en 2 filas reales */
-  #settingsBox {
-    grid-template-columns: 1fr auto;
-    grid-template-rows: auto auto;
-    gap: 8px;
-    justify-self: center;
-  }
+    /* settings en 2 filas reales */
+    #settingsBox {
+        grid-template-columns: 1fr auto;
+        grid-template-rows: auto auto;
+        gap: 8px;
+        justify-self: center;
+    }
 
-  /* categoría ocupa fila completa */
-  #categoryBox {
-    grid-column: 1 / -1;
-  }
+    /* categoría ocupa fila completa */
+    #categoryBox {
+        grid-column: 1 / -1;
+    }
 
-  /* tiempo + botones en segunda fila */
-  #settingsBox .setting-item:nth-child(2) {
-    justify-self: start;
-  }
+    /* tiempo + botones en segunda fila */
+    #settingsBox .setting-item:nth-child(2) {
+        justify-self: start;
+    }
 
-  .setting-help {
-    justify-self: end;
-  }
+    .setting-help {
+        justify-self: end;
+    }
 }
+
 @media (max-width: 480px) {
-  body::before {
-    background-size: 70vw;
-    opacity: 0.03;
-  }
+    body::before {
+        background-size: 70vw;
+        opacity: 0.03;
+    }
 }
+
+
+@media (max-width: 1100px) {
+
+    /* Si la pantalla es pequeña, las tarjetas vuelven a su lugar para no tapar el teclado */
+    .layout {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .side-d {
+        position: static;
+        width: 90%;
+        margin-bottom: 20px;
+    }
+
+    .side-i {
+        position: static;
+        width: 90%;
+        margin-bottom: 20px;
+    }
+
+    .game {
+        order: -1;
+        /* El juego siempre primero */
+    }
+}
+
+#histA,
+#histB {
+    margin-top: 10px;
+    width: 50%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    min-height: 28px;
+}
+
+.trophy {
+    font-size: 22px;
+    animation: pop 0.3s ease;
+}
+
+.star {
+    font-size: 18px;
+    animation: pop 0.3s ease;
+}
+
+.no-wins {
+    opacity: 0.6;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(0.6);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+#nextRoundBtn {
+    transition: all 0.3s ease; /* Para que el cambio de opacidad sea suave */
+}
+

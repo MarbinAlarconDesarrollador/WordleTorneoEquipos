@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Creando Wordle por Equipos</title>
+    <title>Creando Wordle por Equipos </title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192.png">
     <link rel="stylesheet" href="style.css">
@@ -14,33 +14,7 @@
 <body>
 
     <div class="top-bar-container">
-
-        <div id="goalBox" class="tournament-goal">
-            <span>META:</span>
-            <input type="number" id="goalInput" value="5" min="1" onchange="saveGoal()">
-            <span>PUNTOS</span>
-        </div>
-
         <div class="settings-bar" id="settingsBox">
-            <div id="categoryBox" class="setting-item">
-                <label for="categorySelect">CATEGORÍA:</label>
-                <select id="categorySelect" onchange="updateCategoryParams()">
-                    <option value="GENERAL">GENERAL (MIXTO)</option>
-                    <option value="ANIMALES">ANIMALES</option>
-                    <option value="PAISES">PAÍSES / CIUDADES</option>
-                    <option value="NOMBRES">NOMBRES</option>
-                    <option value="COMIDA">COMIDA</option>
-                    <option value="VERBOS">VERBOS</option>
-                    <option value="INGLES">PALABRAS EN INGLES</option>
-                </select>
-            </div>
-
-            <div class="setting-item">
-                <label for="timeInput">⏱️</label>
-                <input type="number" id="timeInput" value="120" min="30" max="300" onchange="updateCategoryParams()">
-                <span>SEGUNDOS</span>
-            </div>
-
             <div class="boxHelp">
                 <button class="setting-help" onclick="startInteractiveTutorial()" title="Cómo jugar">?</button>
                 <button id="themeToggle" class="setting-help" onclick="toggleTheme()" title="Modo Oscuro / Claro"
@@ -48,8 +22,6 @@
                     🌓
                 </button>
             </div>
-
-
         </div>
     </div>
 
@@ -68,24 +40,45 @@
     </div>
 
     <div class="layout">
-
-        <div class="side">
-            <h3 id="nameA" class="team-name" contenteditable="true" onblur="saveNames()">EQUIPO UNO</h3>
-            <div id="turnStatA" class="turn-stat">Partidas: 0</div>
-            <div id="histA" style="width: 100%; margin-top: 10px;"></div>
-        </div>
-
-        <div class="game">
-            <h1 style="margin: 0 0 10px 0; font-size: 1.2rem; opacity: 0.4; letter-spacing: 2px;">WORDLE CREANDO SOFT
-            </h1>
-
+        <div class="side-i">
+            <div style="text-align: center;">
+                <h1 style="margin: 0 0 10px 0; font-size: 1.2rem; opacity: 0.4; letter-spacing: 2px;">WORDLE CREANDO SOFT</h1>
+            </div>
+            <br>
+            <div id="categoryBox" class="setting-item">
+                <label for="categorySelect">CATEGORÍA:</label>
+                <select id="categorySelect" onchange="updateCategoryParams()">
+                    <option value="GENERAL">GENERAL (MIXTO)</option>
+                    <option value="ANIMALES">ANIMALES</option>
+                    <option value="PAISES">PAÍSES / CIUDADES</option>
+                    <option value="NOMBRES">NOMBRES</option>
+                    <option value="COMIDA">COMIDA</option>
+                    <option value="VERBOS">VERBOS</option>
+                    <option value="INGLES">PALABRAS EN INGLES</option>
+                </select>
+            </div>
+            <br>
+            <div id="goalBox" class="tournament-goal">
+                <span>META:</span>
+                <input type="number" id="goalInput" value="5" min="1" onchange="saveGoal()">
+                <span>PUNTOS</span>
+            </div>
+            <br>
+            <div class="setting-item">
+                <label for="timeInput">⏱️</label>
+                <input type="number" id="timeInput" value="120" min="30" max="300" onchange="updateCategoryParams()">
+                <span>SEGUNDOS</span>
+            </div>
+            <br>
             <div id="turnIndicator" class="turn-banner">
                 TURNO: <span id="activePlayerName">---</span>
             </div>
 
             <div id="timer">00</div>
             <div id="scoreHeader"></div>
+        </div>
 
+        <div class="game">
             <div id="grid" class="grid"></div>
 
             <div id="message"
@@ -96,14 +89,22 @@
             <button id="btnNext" class="btn-next" onclick="resetRound()">SIGUIENTE RONDA</button>
         </div>
 
-        <div class="side">
+        <div class="side-d">
+
+            <h3 id="nameA" class="team-name" contenteditable="true" onblur="saveNames()">EQUIPO UNO</h3>
+            <div id="turnStatA" class="turn-stat">Partidas: 0</div>
+            <div id="histA"></div>
+           
             <h3 id="nameB" class="team-name" contenteditable="true" onblur="saveNames()">EQUIPO DOS</h3>
             <div id="turnStatB" class="turn-stat">Partidas: 0</div>
-            <div id="histB" style="width: 100%; margin-top: 10px;"></div>
+            <div id="histB"></div>
         </div>
+
+        
+        <button id="nextRoundBtn" class="btn-reset-all" onclick="hardReset()">⚠️ REINICIAR TORNEO</button>
+
     </div>
 
-    <button class="btn-reset-all" onclick="hardReset()">⚠️ REINICIAR TORNEO</button>
 
     <footer class="game-footer">
         <p>Desarrollado por <strong>Marbin Alarcón</strong> &copy; 2026</p>
